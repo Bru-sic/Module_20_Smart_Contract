@@ -108,7 +108,7 @@ contract JointSavings {
     /** @notice 
     Contract Method: deposit
     Purpose: Deposits funds into the joint account contract  
-    Contraints: None
+    Contraints: None - anyone can deposit into the account.
     Tasks:
        * Updates the local current balance to the contract's current balance 
     */
