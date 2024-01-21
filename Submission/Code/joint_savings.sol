@@ -79,10 +79,10 @@ contract JointSavings {
         require(accountTwo != address(0), "Set the second account owner using 'setAccounts'!");
 
         /// @dev Throw an exception if the message sender is not one of the account holders
-        require((msg.sender == accountOne) || (msg.sender == accountTwo) , "You don't own this account! `sender` not an owner");
+        require((msg.sender == accountOne) || (msg.sender == accountTwo) , "You don't own this account (`sender` is not an account owner)!");
 
         /// @dev Throw an exception if withdrawing to an address not registered as one of the account holders
-        require((recipient == accountOne) || (recipient == accountTwo) , "You don't own this account! `recipient` not an owner");
+        require((recipient == accountOne) || (recipient == accountTwo) , "You don't own this account (`recipient` is not an account owner)!");
 
         /// @dev Throw an execption if the amount requested to be withdrawn is greater than the current balance
         require(amount<=contractBalance,"Insufficient funds!");
