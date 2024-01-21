@@ -17,11 +17,15 @@ features of the joint savings account.
 Development Environment
 -----------------------
 IDE: Remix Online IDE, see: https://remix.ethereum.org
-Compiler Settings: 0.5.0+commit.1d4f565a; Auto compile: On; Language: Solidity; EVM Version: default; Enable optimization: Off;
+Solidity Compiler Settings:
+ * Compiler: 0.5.0+commit.1d4f565a;
+ * Auto compile: On;
+ * Language: Solidity;
+ * EVM Version: byzantium;
+ * Enable optimization: Off;
 */ 
 
-
-/**
+/** @notice
 Import Dependencies
 -------------------
     The SafeMath library has been integrated to catch any underflows or overflows when performing math operations on unsigned integers.
@@ -33,13 +37,12 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v2.5
 
 /// @title implements a joint savings account allowing deposit and withdrawal of funds by authorised account holders
 /// @author Bruno Ivasic
-/// @notice See disclaimer
 contract JointSavings {
     /// @dev Add methods from the SafeMath library to this contract to implement arithmetic underflow and overflow exception handling.
     using SafeMath for uint;   // Add methods from the SafeMath library for unsigned integers (uint)
 
-    // Contract variable definitions
-    address payable accountOne;          // Address of the first account holder
+    /// @dev Contract Variable Definitions
+    address payable accountOne;          /// @dev Address of the first account holder
     address payable accountTwo;          // Address of the second account holder
     
     address public  lastToWithdraw;      // Address of the last addressed used to make   
@@ -67,38 +70,38 @@ contract JointSavings {
     /// @param amount The value in Wei to withdraw from the contract (account).
     /// @param recipient The address of the recipient where the funds will be transfered to.
     function withdraw(uint amount, address payable recipient) public {
-        // Do initial validation to ensure the request is valid
+        /// @dev Do initial validation to ensure the request is valid
 
-        // Throw an exception if the accountOne owner has not been set using `setAccounts`
+        /// @dev Throw an exception if the accountOne owner has not been set using `setAccounts`
         require(accountOne != address(0), "Set the first account owner using 'setAccounts'!");
 
-        // Throw an exception if the accountTwo owner has not been set using `setAccounts`
+        /// @dev Throw an exception if the accountTwo owner has not been set using `setAccounts`
         require(accountTwo != address(0), "Set the second account owner using 'setAccounts'!");
 
-        // Throw an exception if the message sender is not one of the account holders
-        require((msg.sender == accountOne) || (msg.sender == accountTwo) , "You don't own this account!");
+        /// @dev Throw an exception if the message sender is not one of the account holders
+        require((msg.sender == accountOne) || (msg.sender == accountTwo) , "You don't own this account! `sender` not an owner");
 
-        // Throw an exception if withdrawing to an address not registered as one of the account holders
-        require((recipient == accountOne) || (recipient == accountTwo) , "You don't own this account!");
+        /// @dev Throw an exception if withdrawing to an address not registered as one of the account holders
+        require((recipient == accountOne) || (recipient == accountTwo) , "You don't own this account! `recipient` not an owner");
 
-        // Throw an execption if the amount requested to be withdrawn is greater than the current balance
+        /// @dev Throw an execption if the amount requested to be withdrawn is greater than the current balance
         require(amount<=contractBalance,"Insufficient funds!");
 
-        // All validation passed, now its time to update some information.
+        /// @dev All validation passed, now its time to update some information.
 
-        // Set who made the last withdrawal by setting lastToWithdraw with the value of recipient
-        // To minimise gas expense, only update the lastToWithdraw if it changes
+        /// @dev Set who made the last withdrawal by setting the `lastToWithdraw` address with the value of the `recipient`
+        /// @dev To minimise gas expense, only update the lastToWithdraw if it changes
         if (lastToWithdraw != recipient) {
             lastToWithdraw = recipient;
         }
         
-        // Transfer the `amount` in Wei from the smart contract to the `recipient`'s address
+        /// @dev Transfer the `amount` in Wei from the smart contract to the `recipient`'s address
         recipient.transfer(amount);
 
-        // Set the `lastWithdrawAmount` equal to `amount`
+        /// @dev Set the `lastWithdrawAmount` equal to `amount`
         lastWithdrawAmount = amount;
 
-        // Set `contractBalance` to match the actual contract balalance to account for any gas expenses
+        /// @dev Set `contractBalance` to match the actual contract balalance to account for any gas expenses
         contractBalance = address(this).balance;
     }
 
@@ -110,7 +113,7 @@ contract JointSavings {
        * Updates the local current balance to the contract's current balance 
     */
     function deposit() public payable {
-        // Set `contractBalance` to match the actual contract balalance to account for any gas expenses
+        /// @dev Set `contractBalance` to match the actual contract balalance to account for any gas expenses
         contractBalance = address(this).balance;
     }
 
@@ -131,27 +134,27 @@ contract JointSavings {
     /// @param account1 The address of the first account holder of the smart contract account.
     /// @param account2 The address of the second account holder of the smart contract account.
     function setAccounts(address payable account1, address payable account2) public{
-        // Do initial validation to ensure the request is valid
+        /// @dev Do initial validation to ensure the request is valid
         
-        // Throw an exception if the account owners (`accountOne` and `accountTwo`) have already been set
-        // This is to prevent unauthorised changing of account owners even if it is done by one of the existing ones
+        /// @dev Throw an exception if the account owners (`accountOne` and `accountTwo`) have already been set
+        /// @dev This is to prevent unauthorised changing of account owners even if it is done by one of the existing ones
         require(accountOne == address(0) && accountTwo == address(0),"Account owners have already been set!" );
 
-        // Throw an exception if account1 is not a valid address
+        /// @dev Throw an exception if account1 is not a valid address
         require(account1 != address(0), "Invalid address specified for `account1`!");
 
-        // Throw an exception if account2 is not a valid address
+        /// @dev Throw an exception if account2 is not a valid address
         require(account2 != address(0), "Invalid address specified for `account2`!");
 
-        // Throw an exception if account1 equals account2 - as it would not be a joint account
+        /// @dev Throw an exception if account1 equals account2 - as it would not be a joint account
         require(account1 != account2, "`account1` address must be different to `account2` address!");
 
-        // Throw an exception if the message sender is not one of the new account holders
+        /// @dev Throw an exception if the message sender is not one of the new account holders
         require((msg.sender == account1) || (msg.sender == account2) , "Sender must be either `account1` or `account2`");
 
-        // Store the values of `accountOne` and `accountTwo` to `account1` and `account2` respectively.
-        accountOne = account1; // Set the new first account owner
-        accountTwo = account2; // Set the new second account owner
+        /// @dev Store the values of `accountOne` and `accountTwo` to `account1` and `account2` respectively.
+        accountOne = account1; /// @dev Set the new first account owner
+        accountTwo = account2; /// @dev Set the new second account owner
     }
 
     /** @notice 
@@ -163,4 +166,19 @@ contract JointSavings {
     */
     function() external payable {
     }
+
+    /** @notice
+    DISCLAIMER
+    ==========
+    1. The smart contract included in this project is provided as is.
+    2. No guarantee, representation or warranty is being made, express or implied, as to the safety or correctness of the
+       user interface or of the smart contract itself.
+    3. This smart contract has not been independently audited and as such there is no assurance that it will work as intended.
+       Users may experience delays, failures, errors, omissions, loss of transmitted information, or financial loss.
+    4. No warranty of merchantability, non-infringement or fitness for any particular purpose is made.
+    5. Use of this smart contract may be restricted or prohibited under applicable law, including securities laws.
+    6. Advice from competent legal counsel is strongly recommended before considering use of this smart contract.
+    7. Information provided in this repository shall not be construed as investment advice or legal advice, and is not meant
+       to replace competent legal counsel.
+    */
 }
