@@ -61,15 +61,16 @@ contract JointSavings {
     Tasks:
        * Throw exception if recipient is not one of the account holders
        * Throw exception if sender of message if is not one of the account holders (additional edge case)
+       * Throw an execption if the amount requested to be withdrawn is equal to zero
        * Throw exception if the amount requested to be withdrawn is greater than the current balance
        * Updates lastToWithdraw with the address of the recipient, only if different
        * Transfers the requested amount to the recipient's address
        * Updates the lastWithdrawAmount with the amount withdrawn
        * Updates the local current balance to the contract's current balance 
     */
-    /// @param amount The value in Wei to withdraw from the contract (account).
+    /// @param amountInWei The value in Wei to withdraw from the contract (account).
     /// @param recipient The address of the recipient where the funds will be transfered to.
-    function withdraw(uint amount, address payable recipient) public {
+    function withdraw(uint amountInWei, address payable recipient) public {
         /// @dev Do initial validation to ensure the request is valid
 
         /// @dev Throw an exception if the accountOne owner has not been set using `setAccounts`
@@ -84,8 +85,11 @@ contract JointSavings {
         /// @dev Throw an exception if withdrawing to an address not registered as one of the account holders
         require((recipient == accountOne) || (recipient == accountTwo) , "You don't own this account (`recipient` is not an account owner)!");
 
-        /// @dev Throw an execption if the amount requested to be withdrawn is greater than the current balance
-        require(amount<=contractBalance,"Insufficient funds!");
+        /// @dev Throw an execption if the `amountInWei' requested to be withdrawn is equal to zero
+        require(amountInWei>0,"Withdrawal amount must be greater than 0!");
+
+        /// @dev Throw an execption if the `amountInWei' requested to be withdrawn is greater than the current balance
+        require(amountInWei<=contractBalance,"Insufficient funds!");
 
         /// @dev All validation passed, now its time to update some information.
 
@@ -95,11 +99,11 @@ contract JointSavings {
             lastToWithdraw = recipient;
         }
         
-        /// @dev Transfer the `amount` in Wei from the smart contract to the `recipient`'s address
-        recipient.transfer(amount);
+        /// @dev Transfer the `amountInWei` in Wei from the smart contract to the `recipient`'s address
+        recipient.transfer(amountInWei);
 
-        /// @dev Set the `lastWithdrawAmount` equal to `amount`
-        lastWithdrawAmount = amount;
+        /// @dev Set the `lastWithdrawAmount` equal to `amountInWei`
+        lastWithdrawAmount = amountInWei;
 
         /// @dev Set `contractBalance` to match the actual contract balalance to account for any gas expenses
         contractBalance = address(this).balance;
