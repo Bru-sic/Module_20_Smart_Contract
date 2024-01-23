@@ -12,8 +12,36 @@ Files associated with this solution:
 
 
 # Output Screen Shots
-*** TO DO ***
+## 1. Screenshot following `setAccounts` function execution
+![alt="1. Screenshot following `setAccounts` function execution"](./Submission/Screenshots/01_SetAccount.png)
 
+---
+## 2. Screenshots following `deposit` function execution
+### 2.1 `deposit` sending 1 ether as wei
+![alt="2.1 `deposit` sending 1 ether as wei"](./Submission/Screenshots/02_Tx_1_Send_1_ether_as_wei.png)
+### 2.2 `deposit` sending 10 ether as wei
+![alt="2.2 `deposit` sending 10 ether as wei"](./Submission/Screenshots/02_Tx_2%20_Send_10_ether_as_wei.png)
+### 2.3 `deposit` sending 5 ether
+![alt="2.3 `deposit` sending 5 ether"](./Submission/Screenshots/02_Tx_3_Send_5_ether.png)
+---
+
+## 3. Screenshots following `withdraw` execution
+These also show the `contractBalance`, `lastToWithdraw` and `lastWithdrawAmount` functions were executed following the `withdraw` to verify that the funds were withdrawn from the contract as can be seen in the `RUN & DEPLOY TRANSACTIONS` panel on the left.
+
+### 3.1 `withdraw` of 5 ether into `accountOne`
+![alt="3.1 `withdraw` of 5 ether into `accountOne`"](./Submission/Screenshots/03_Tx_1_Withdraw_5_ether_into_accountOne.png)
+
+
+### 3.2 `withdraw` of 10 ether into `accountTwo`
+![alt="3.2 `withdraw` of 10 ether into `accountTwo`"](./Submission/Screenshots/03_Tx_2_Withdraw_10_ether_into_accountTwo.png)
+
+---
+# Scope for Future Enhancements
+The following changes / enhancements were considered but not implmented for reasons of needing to remain broadly within the confines of the original starter code and scoring guidelines. Potential future releases could include:
+1. Using a Mapping, ideally an [Iterable Mapping](https://github.com/ethereum/dapp-bin/blob/master/library/iterable_mapping.sol) to keep track of account owner addresses, thus allowing the contract to have a larger number of joint account holders without the need to hard code corresponding
+individual variables. E.g. `mapping (address => bool) private _accountOwners`  instead of `accountThree`, `accountFour` etc.
+2. Calling `setAccounts` from a newly defined `constructor` function to avoid any time lag between when the contract is created and when the 
+accounts are set, to avoid potential for hijacking the contract during that interim state.
 ---
 
 # Technologies
@@ -31,11 +59,13 @@ Files associated with this solution:
 # Enhancements to base starter code
 * Items marked as @TODO
 * Error Handling and Validation
-  * incorporated Safe Math to intercept arithmetic overflow exploits
-* Documentation and Commenting - added in-depth comments in complex sections of the code to enhance the maintainability and scalability of the application code. 
+  * Provisioned Safe Math to intercept arithmetic overflow exploits (although not used as no arithmetic functions were necessary).
+* Documentation and Commenting
+  * Adopted [Ethereum Natural Language Specification Format \(NatSpec\)](https://docs.soliditylang.org/en/develop/natspec-format.html) for code commenting. 
+  * Added in-depth comments in complex sections of the code to enhance the maintainability and scalability of the application code. 
 
 # Dependencies
-* OpenZepplin Safe Math 
+* OpenZepplin Safe Math
 
 # Installation / Setup
 No installation is required if using the web app online version of [Remix Online IDE](https://remix.ethereum.org). 
